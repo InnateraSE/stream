@@ -14,10 +14,10 @@
     W: 0
 
 - id: 1 # max pool, stride 2
-  operator_type: Pooling
-  equation: O[b][g][oy][ox]+=W[fx][fy]*I[b][g][iy][ix]
+  operator_type: MaxPool
+  equation: O[b][k][oy][ox]+=W[fx][fy]*I[b][k][iy][ix]
   dimension_relations: [ix=2*ox+1*fx, iy=2*oy+1*fy]
-  loop_dims: [B, G, OY, OX, FX, FY]
+  loop_dims: [B, K, OY, OX, FX, FY]
   loop_sizes: [1, 64, 56, 56, 3, 3]
   operand_precision:
     I: 8
@@ -60,8 +60,8 @@
 
 - id: 4 # Addition of layer 1 (residual path) and layer 3 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 64, 56, 56]
   operand_precision:
     W: 8
@@ -104,8 +104,8 @@
 
 - id: 7 # Addition of layer 4 (residual connection) and layer 6 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 64, 56, 56]
   operand_precision:
     W: 8
@@ -147,7 +147,7 @@
     W: 9
 
 - id: 10 # conv downsample of layer 7
-  operator_type: Conv_downsample
+  operator_type: Conv
   equation: O[b][k][oy][ox]+=W[k][c][fy][fx]*I[b][c][iy][ix]
   dimension_relations: [ix=2*ox+1*fx, iy=2*oy+1*fy]
   loop_dims: [B, K, C, OY, OX, FY, FX]
@@ -163,8 +163,8 @@
 
 - id: 11 # Addition of layer 10 (residual connection) and layer 9 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 128, 28, 28]
   operand_precision:
     W: 8
@@ -207,8 +207,8 @@
 
 - id: 14 # Addition of layer 11 (residual connection) and layer 13 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 128, 28, 28]
   operand_precision:
     W: 8
@@ -250,7 +250,7 @@
     W: 16
 
 - id: 17 # conv downsample of layer 14
-  operator_type: Conv_downsample
+  operator_type: Conv
   equation: O[b][k][oy][ox]+=W[k][c][fy][fx]*I[b][c][iy][ix]
   dimension_relations: [ix=2*ox+1*fx, iy=2*oy+1*fy]
   loop_dims: [B, K, C, OY, OX, FY, FX]
@@ -266,8 +266,8 @@
 
 - id: 18 # Addition of layer 17 (residual connection) and layer 16 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 256, 14, 14]
   operand_precision:
     W: 8
@@ -310,8 +310,8 @@
 
 - id: 21 # Addition of layer 18 (residual connection) and layer 20 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 256, 14, 14]
   operand_precision:
     W: 8
@@ -353,7 +353,7 @@
     W: 23
 
 - id: 24 # conv downsample of layer 21
-  operator_type: Conv_downsample
+  operator_type: Conv
   equation: O[b][k][oy][ox]+=W[k][c][fy][fx]*I[b][c][iy][ix]
   dimension_relations: [ix=2*ox+1*fx, iy=2*oy+1*fy]
   loop_dims: [B, K, C, OY, OX, FY, FX]
@@ -369,8 +369,8 @@
 
 - id: 25 # Addition of layer 24 (residual connection) and layer 23 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 512, 7, 7]
   operand_precision:
     W: 8
@@ -413,8 +413,8 @@
 
 - id: 28 # Addition of layer 25 (residual connection) and layer 27 (main path)
   operator_type: Add
-  equation: O[b][g][oy][ox]=W[b][g][oy][ox]+I[b][g][oy][ox]
-  loop_dims: [B, G, OY, OX]
+  equation: O[b][k][oy][ox]=W[b][k][oy][ox]+I[b][k][oy][ox]
+  loop_dims: [B, K, OY, OX]
   loop_sizes: [1, 512, 7, 7]
   operand_precision:
     W: 8
@@ -426,10 +426,10 @@
     I: 27
 
 - id: 29 # aver pool
-  operator_type: Pooling
-  equation: O[b][g][oy][ox]+=W[fx][fy]*I[b][g][iy][ix]
+  operator_type: GlobalAveragePool
+  equation: O[b][k][oy][ox]+=W[fx][fy]*I[b][k][iy][ix]
   dimension_relations: [ix=1*ox+1*fx, iy=1*oy+1*fy]
-  loop_dims: [B, G, OY, OX, FX, FY]
+  loop_dims: [B, K, OY, OX, FX, FY]
   loop_sizes: [1, 512, 1, 1, 7, 7]
   operand_precision:
     I: 8

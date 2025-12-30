@@ -12,7 +12,8 @@ _logging.basicConfig(level=_logging_level, format=_logging_format)
 
 ############################################INPUTS############################################
 accelerator = "stream/inputs/examples/hardware/tpu_like_quad_core.yaml"
-workload_path = "stream/inputs/examples/workload/resnet18.onnx"
+# workload_path = "stream/inputs/examples/workload/resnet18.onnx"
+workload_path = "stream/inputs/examples/workload/resnet18.yaml"
 mapping_path = "stream/inputs/examples/mapping/tpu_like_quad_core.yaml"
 mode = "fused"
 layer_stacks = [tuple(range(0, 12)), tuple(range(12, 22))] + list((i,) for i in range(22, 49))
@@ -22,7 +23,7 @@ layer_stacks = [tuple(range(0, 12)), tuple(range(12, 22))] + list((i,) for i in 
 hw_name = accelerator.split("/")[-1].split(".")[0]
 wl_name = re.split(r"/|\.", workload_path)[-1]
 if wl_name == "onnx":
-    wl_name = re.split(r"/|\.", workload_path)[-2]
+    wl_name = re.split(r"/|\.", workload_path)[-2] + "_onnx"
 experiment_id = f"{hw_name}-{wl_name}-{mode}-constraint_optimization"
 ######################################################################
 

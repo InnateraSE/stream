@@ -1,4 +1,14 @@
-zigzag-dse==3.8.2
+numpy
+networkx
+sympy
+matplotlib
+onnx
+tqdm
+multiprocessing_on_dill
+pyyaml
+pytest
+typeguard
+seaborn
 rtree
 deap
 matplotlib

@@ -38,6 +38,5 @@ class UserDefinedModelParserStage(ZigZagWorkloadParserStage):
 
     def parse_workload_stream(self, all_mappings: dict[str, InterCoreMappingAttributes]) -> DNNWorkloadStream:
         workload_data = self._parse_workload_data()
-        mapping_data = self._parse_mapping_data()
-        factory = WorkloadFactoryStream(workload_data, mapping_data)
-        return factory.create(all_mappings)
+        factory = WorkloadFactoryStream(workload_data, all_mappings, self.accelerator)
+        return factory.create()

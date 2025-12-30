@@ -17,6 +17,7 @@ from stream.stages.generation.tiled_workload_generation import TiledWorkloadGene
 from stream.stages.generation.tiling_generation import TilingGenerationStage
 from stream.stages.parsing.accelerator_parser import AcceleratorParserStage
 from stream.stages.parsing.onnx_model_parser import ONNXModelParserStage as StreamONNXModelParserStage
+from stream.stages.parsing.user_defined_model_parser import UserDefinedModelParserStage
 from stream.stages.set_fixed_allocation_performance import SetFixedAllocationPerformanceStage
 from stream.stages.stage import MainStage
 
@@ -96,7 +97,8 @@ def optimize_allocation_ga(  # noqa: PLR0913
         mainstage = MainStage(
             [  # Initializes the MainStage as entry point
                 AcceleratorParserStage,  # Parses the accelerator
-                StreamONNXModelParserStage,  # Parses the ONNX Model into the workload
+                # StreamONNXModelParserStage,  # Parses the ONNX Model into the workload
+                UserDefinedModelParserStage,
                 LayerStacksGenerationStage,
                 TilingGenerationStage,
                 TiledWorkloadGenerationStage,
@@ -169,7 +171,8 @@ def optimize_allocation_co(  # noqa: PLR0913
         mainstage = MainStage(
             [  # Initializes the MainStage as entry point
                 AcceleratorParserStage,  # Parses the accelerator
-                StreamONNXModelParserStage,  # Parses the ONNX Model into the workload
+                # StreamONNXModelParserStage,  # Parses the ONNX Model into the workload
+                UserDefinedModelParserStage,
                 LayerStacksGenerationStage,
                 TilingGenerationStage,
                 TiledWorkloadGenerationStage,
