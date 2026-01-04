@@ -1,13 +1,11 @@
-import logging
 from typing import Any
 from copy import deepcopy
 
 from stream.workload.computation.computation_node import ComputationNode
-from zigzag.utils import DiGraphWrapper
-logger = logging.getLogger(__name__)
+from stream.workload.onnx_workload import ComputationNodeWorkload
 
 
-class DNNWorkloadStream(DiGraphWrapper[ComputationNode]):
+class DNNWorkloadStream(ComputationNodeWorkload):
     """
     Collect all the algorithmic workload information here.
     Similar to `DNNWorkload` from ZigZag, but returns a DiGraph of ComputationNodes instead of LayerNodes.
