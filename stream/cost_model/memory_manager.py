@@ -138,7 +138,8 @@ class MemoryManager:
         relevant_usages = all_usages[insert_idx:]
         updated_relevant_usages = relevant_usages + tensor.size
         if np.max(updated_relevant_usages, initial=0) > self.top_instance_capacities[top_instance]:
-            raise ValueError(f"Inserting {tensor} in {top_instance} caused memory overflow.")
+            raise ValueError(f"Inserting {tensor} in {top_instance} caused memory overflow."
+                             f"")
         self.top_instance_stored_cumsum[top_instance][insert_idx:, 1] = updated_relevant_usages
 
         # If the timestep was not in all_timesteps, it will be inserted here
@@ -215,7 +216,7 @@ class MemoryManager:
         evictable_tensors = [tensor for tensor in stored_tensors if tensor not in relevant_exceptions]
         evictable_tensors_priority_size: list[int] = []
         for tensor in evictable_tensors:
-            instance_priority = tensor.get_instance_priority(top_instance, self)
+            instance_priority = tensor.get_instance_priority()
             importance = instance_priority * tensor.size
             evictable_tensors_priority_size.append(importance)
         evictable_tensors_priority_size_tuple, evictable_tensors_tuple = zip(

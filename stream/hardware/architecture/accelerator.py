@@ -254,8 +254,7 @@ class Accelerator:
         # Always remove hidden operands from sender, as they are dynamic
         not_from_offchip = sending_core.id != self.offchip_core_id
         not_on_producing_core = sending_core.id != tensor.origin.chosen_core_allocation
-        storing_instance = self.get_storing_memory_instance(tensor, sending_core)
-        tensor_priority = tensor.get_instance_priority(storing_instance, self.memory_manager)
+        tensor_priority = tensor.get_instance_priority()
         condition_for_removal = not_from_offchip and not_on_producing_core and tensor_priority == 0
         if condition_for_removal or tensor_operand == Constants.HIDDEN_MEM_OP:
             self.remove_tensor(tensor, sending_core, memory_op=tensor.memory_operand, timestep=transfer_end)
