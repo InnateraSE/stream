@@ -3,4 +3,4 @@
 	url = https://github.com/InnateraSE/zigzag.git
 [submodule ".external"]
 	path = .external
-	url = https://github.com/InnateraSE/zigzag.git
+	url = git@github.com:InnateraSE/spiking-zigzag.git
