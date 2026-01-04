@@ -25,6 +25,8 @@ memories:
           - O, th
           - H, fh
           - H, tl
+          - H, fl
+          - H, th
     served_dimensions: [D1, D2]
 
 operational_array:
