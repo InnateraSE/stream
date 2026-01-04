@@ -223,6 +223,7 @@ class ComputationNode(LayerNode, Node):
             and self.memory_operand_links == other.memory_operand_links
             and self.nb_real_predecessors == other.nb_real_predecessors
             and self.id == other.id
+            and self.hidden_mode == other.hidden_mode
             # NOTE: don't include sub_id
         )
 
@@ -266,7 +267,7 @@ class ComputationNode(LayerNode, Node):
     def set_too_large_operands(self, too_large_operands: list[MemoryOperand]):
         self.too_large_operands = too_large_operands
 
-    def update_loop_ranges(self, new_ranges: LOOP_RANGES_T):
+    def update_loop_ranges(self, new_ranges: LOOP_RANGES_T, original_node: "ComputationNode"):
         """Override the loop ranges with a new value for each of the given LayerDims. Keep the old range for the
         LayerDims not defined in `new_ranges`"""
         for layer_dim in new_ranges:
@@ -276,6 +277,22 @@ class ComputationNode(LayerNode, Node):
         self.calculate_pr_loop_ranges()
         # Re-set the operand tensors for the new loop_ranges
         self.set_operand_tensors()
+        self.update_hidden_mode(new_ranges, original_node)
+
+    def update_hidden_mode(self, new_ranges: LOOP_RANGES_T, original_node: "ComputationNode"):
+        if self.is_hidden:
+            if new_ranges[self.sequence_dim][0] == 0 and new_ranges[self.sequence_dim][1] == original_node.loop_ranges[self.sequence_dim][1]:
+                self.set_hidden_mode(Constants.HIDDEN_VOLATILE_MODE)
+            elif new_ranges[self.sequence_dim][0] > 0 and new_ranges[self.sequence_dim][1] < original_node.loop_ranges[self.sequence_dim][1]:
+                self.set_hidden_mode(Constants.HIDDEN_LOAD_STORE_MODE)
+            elif new_ranges[self.sequence_dim][0] > 0 and new_ranges[self.sequence_dim][1] == original_node.loop_ranges[self.sequence_dim][1]:
+                self.set_hidden_mode(Constants.HIDDEN_LOAD_ONLY_MODE)
+            elif new_ranges[self.sequence_dim][0] == 0 and new_ranges[self.sequence_dim][1] < original_node.loop_ranges[self.sequence_dim][1]:
+                self.set_hidden_mode(Constants.HIDDEN_STORE_ONLY_MODE)
+            else:
+                raise ValueError("Invalid hidden mode detected after updating loop ranges.")
+        else:
+            self.set_hidden_mode(Constants.HIDDEN_LOAD_STORE_MODE)
 
     def extract_inter_core_mapping_attr(self):
         mapping_attr = InterCoreMappingAttributes(
@@ -384,4 +401,5 @@ class GeneratedComputationNode(ComputationNode):
             and self.memory_operand_links == other.memory_operand_links
             and self.nb_real_predecessors == other.nb_real_predecessors
             and self.base_id == other.base_id
+            and self.hidden_mode == other.hidden_mode
         )
